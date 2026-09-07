@@ -1,0 +1,27 @@
+{
+  "name": "pulsar-ssh-client",
+  "version": "0.1.0",
+  "description": "Edit files on a remote machine over SSH. Nothing is installed on the remote host.",
+  "keywords": ["ssh", "sftp", "remote", "remote-development"],
+  "repository": "https://github.com/vaiolabs/pulsar-ssh-client",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.100.0 <2.0.0",
+    "pulsar": ">=1.121.0 <2.0.0"
+  },
+  "main": "./lib/main",
+  "dependencies": {
+    "@xterm/xterm": "^6.0.0",
+    "atom-select-list": "^0.8.1",
+    "etch": "^0.14.1",
+    "ssh-config": "^5.2.1",
+    "ssh2": "^1.17.0"
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  }
+}
