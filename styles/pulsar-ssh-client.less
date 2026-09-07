@@ -1,0 +1,32 @@
+@import "ui-variables";
+
+.pulsar-ssh-client-modal {
+  .pulsar-ssh-client-message {
+    font-weight: bold;
+    margin-bottom: @component-padding / 2;
+  }
+
+  .pulsar-ssh-client-detail {
+    color: @text-color-subtle;
+    margin-bottom: @component-padding;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  pre.pulsar-ssh-client-detail {
+    font-family: monospace;
+    background: @base-background-color;
+    padding: @component-padding / 2;
+    border-radius: @component-border-radius;
+  }
+
+  .pulsar-ssh-client-buttons {
+    display: flex;
+    gap: @component-padding / 2;
+    justify-content: flex-end;
+  }
+}
+
+.pulsar-ssh-client-input input.input-text {
+  width: 100%;
+}
