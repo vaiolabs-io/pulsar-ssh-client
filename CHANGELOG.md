@@ -39,6 +39,17 @@ shell.
   authentication, not several.
 - Status bar tile showing the connected host.
 
+### Fixed
+- Password, passphrase and keyboard-interactive prompts could not be
+  submitted. They subscribed to `core:confirm`, which Pulsar's keymap does not
+  bind on a plain `<input>` — only on things like `atom-text-editor[mini]` and
+  `.select-list` — so pressing Enter did nothing and there was no way to
+  authenticate. Escape worked only because `core:cancel` is bound on `body`.
+  Keys are now handled directly.
+- A prompt cancelled itself when it lost focus, throwing away a half-typed
+  password whenever a password manager, the devtools or the window manager
+  took focus. The blur handler is gone.
+
 ### Notes
 - Requires nothing on the remote host but `sshd` and its default SFTP
   subsystem. No server binary is downloaded or installed.

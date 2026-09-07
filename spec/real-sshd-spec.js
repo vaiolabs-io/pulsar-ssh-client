@@ -30,6 +30,7 @@ const TEST_HOST = process.env.PULSAR_SSH_TEST_HOST;
 const TEST_PORT = process.env.PULSAR_SSH_TEST_PORT || '2222';
 const TEST_USER = process.env.PULSAR_SSH_TEST_USER || 'tester';
 const TEST_KEY = process.env.PULSAR_SSH_TEST_KEY;
+const TEST_PASSWORD_PORT = process.env.PULSAR_SSH_TEST_PASSWORD_PORT;
 
 const describeIntegration = (TEST_HOST && TEST_KEY) ? describe : xdescribe;
 
@@ -286,6 +287,75 @@ describeIntegration('against a real sshd', () => {
       const result = await connection.exec(`cat ${remoteDir}/editor.txt`);
       expect(result.stdout).toBe('edited in pulsar\n');
       connectionManager.connections.clear();
+    });
+  });
+});
+
+
+// A second server offering only password auth. We do not know a valid
+// password -- and do not need one. What matters is that the server's method
+// list reaches our auth handler, that the prompt appears, and that what the
+// user types is actually sent. That path was broken: the prompt appeared but
+// Enter did nothing, so authentication could never proceed.
+const describePassword = (TEST_HOST && TEST_PASSWORD_PORT) ? describe : xdescribe;
+
+describePassword('against a password-only sshd', () => {
+  const alias = 'pulsar-ssh-password-test';
+  let configPath;
+
+  function currentInput() {
+    return document.querySelector('.pulsar-ssh-client-input input');
+  }
+
+  function answerPrompt(text) {
+    const input = currentInput();
+    input.value = text;
+    input.dispatchEvent(new KeyboardEvent('keydown',
+      { key: 'Enter', bubbles: true, cancelable: true }));
+  }
+
+  beforeEach(() => {
+    jasmine.attachToDOM(atom.views.getView(atom.workspace));
+
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pulsar-ssh-pw-'));
+    configPath = path.join(dir, 'config');
+    fs.writeFileSync(configPath, [
+      `Host ${alias}`,
+      `  HostName ${TEST_HOST}`,
+      `  Port ${TEST_PASSWORD_PORT}`,
+      `  User ${TEST_USER}`,
+      '  PreferredAuthentications password',
+      '  StrictHostKeyChecking no',
+      ''
+    ].join('\n'));
+    atom.config.set('pulsar-ssh-client.configFile', configPath);
+  });
+
+  it('prompts for a password and sends what was typed', () => {
+    const connection = new SSHConnection(alias);
+    let failure = null;
+
+    runs(() => {
+      connection.connect().then(
+        () => { failure = 'unexpectedly connected'; },
+        err => { failure = err; });
+    });
+
+    // Three prompts, because a rejected password is retried three times.
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      waitsFor(`password prompt ${attempt}`, () => currentInput() !== null, 15000);
+      runs(() => answerPrompt(`definitely-not-the-password-${attempt}`));
+    }
+
+    waitsFor('the server to refuse', () => failure !== null, 15000);
+
+    runs(() => {
+      // Reaching a real authentication failure proves the whole path worked:
+      // the server offered password, our handler prompted, and the typed
+      // value was sent and rejected on its merits.
+      expect(typeof failure).not.toBe('string');
+      expect(failure.message).toMatch(/authentication|All configured|failed/i);
+      connection.close();
     });
   });
 });
