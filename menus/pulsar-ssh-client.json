@@ -6,12 +6,40 @@
         {
           "label": "SSH Client",
           "submenu": [
-            { "label": "Connect to Host…", "command": "pulsar-ssh-client:connect-to-host" },
-            { "label": "Open Remote File…", "command": "pulsar-ssh-client:open-remote-file" },
-            { "label": "Disconnect…", "command": "pulsar-ssh-client:disconnect" },
-            { "type": "separator" },
-            { "label": "Open SSH Configuration File", "command": "pulsar-ssh-client:open-ssh-config" },
-            { "label": "Show Log", "command": "pulsar-ssh-client:show-log" }
+            {
+              "label": "Connect to Host\u2026",
+              "command": "pulsar-ssh-client:connect-to-host"
+            },
+            {
+              "label": "Open Remote File\u2026",
+              "command": "pulsar-ssh-client:open-remote-file"
+            },
+            {
+              "label": "Disconnect\u2026",
+              "command": "pulsar-ssh-client:disconnect"
+            },
+            {
+              "type": "separator"
+            },
+            {
+              "label": "Toggle Remote Tree",
+              "command": "pulsar-ssh-client:toggle-tree"
+            },
+            {
+              "label": "Refresh Remote Tree",
+              "command": "pulsar-ssh-client:refresh-tree"
+            },
+            {
+              "type": "separator"
+            },
+            {
+              "label": "Open SSH Configuration File",
+              "command": "pulsar-ssh-client:open-ssh-config"
+            },
+            {
+              "label": "Show Log",
+              "command": "pulsar-ssh-client:show-log"
+            }
           ]
         }
       ]

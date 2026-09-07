@@ -111,6 +111,17 @@ describeIntegration('against a real sshd', () => {
     });
   });
 
+  it('resolves the login directory', () => {
+    // The tree roots itself here when no directory is configured.
+    waitsForPromise(async () => {
+      expect(connection.homeDirectory).toBeTruthy();
+      expect(connection.homeDirectory.startsWith('/')).toBe(true);
+
+      const result = await connection.exec('cd ~ && pwd');
+      expect(connection.homeDirectory).toBe(result.stdout.trim());
+    });
+  });
+
   it('reuses one SFTP channel', () => {
     waitsForPromise(async () => {
       const first = await connection.sftp();

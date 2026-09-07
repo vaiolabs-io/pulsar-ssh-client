@@ -23,6 +23,7 @@ Early. See [CHANGELOG.md](CHANGELOG.md) for what works today.
 - Verifies host keys against `~/.ssh/known_hosts` and warns when one changes.
 - Opens remote files as ordinary Pulsar editors. No local copy, no temp file,
   no sync step — reads and writes stream over SFTP.
+- Browses the remote host in its own file tree, in the left dock.
 
 ## What it deliberately does not do
 

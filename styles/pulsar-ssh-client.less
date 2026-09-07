@@ -40,3 +40,30 @@
 .pulsar-ssh-client-status {
   cursor: pointer;
 }
+
+.pulsar-ssh-client-tree {
+  overflow: auto;
+  padding: @component-padding / 2;
+
+  .pulsar-ssh-client-empty {
+    padding: @component-padding;
+    color: @text-color-subtle;
+
+    .btn {
+      margin-top: @component-padding / 2;
+    }
+  }
+
+  .pulsar-ssh-client-loading {
+    color: @text-color-subtle;
+    font-style: italic;
+  }
+
+  .pulsar-ssh-client-host > .header {
+    font-weight: bold;
+  }
+
+  .entry.file {
+    cursor: pointer;
+  }
+}

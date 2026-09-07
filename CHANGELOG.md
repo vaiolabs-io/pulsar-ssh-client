@@ -2,10 +2,15 @@
 
 ## Unreleased
 
-Remote files can be opened, edited and saved. The tree panel and the remote
-terminal are not built yet, so files are reached by path rather than browsed.
+Remote files can be browsed, opened, edited and saved. The remote terminal is
+not built yet.
 
 ### Added
+- A remote file tree, in the left dock. Pulsar's own tree-view cannot show a
+  remote root -- it calls `fs.lstatSyncNoException` on each project path and
+  drops the ones that fail, with no error -- so this is a separate tree. It
+  lists over SFTP, expands lazily, remembers which folders were open, and
+  roots each host at its login directory.
 - Connect to a host from a picker listing every `Host` in `~/.ssh/config`, or
   by typing a hostname that is not in it.
 - Open, edit and save remote files. No local copy and no sync step: reads and
