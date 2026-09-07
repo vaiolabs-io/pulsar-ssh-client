@@ -24,6 +24,7 @@ const { SSHConnection } = require('../lib/ssh/connection');
 const RemoteFile = require('../lib/fs/remote-file');
 const RemoteDirectory = require('../lib/fs/remote-directory');
 const connectionManager = require('../lib/connection-manager');
+const { RemoteTreeView } = require('../lib/ui/remote-tree');
 
 const TEST_HOST = process.env.PULSAR_SSH_TEST_HOST;
 const TEST_PORT = process.env.PULSAR_SSH_TEST_PORT || '2222';
@@ -227,6 +228,37 @@ describeIntegration('against a real sshd', () => {
       expect(typeof stream.setWindow).toBe('function');
       stream.setWindow(30, 100, 0, 0);
       stream.end();
+    });
+  });
+
+  it('renders real directory contents in the tree', () => {
+    let view = null;
+
+    waitsForPromise(async () => {
+      await connection.exec(
+        `cd ${remoteDir} && mkdir -p src && touch readme.md .dotfile`);
+
+      atom.config.set('pulsar-ssh-client.defaultDirectory', remoteDir);
+      atom.config.set('pulsar-ssh-client.showHiddenFiles', false);
+      connectionManager.connections.set(connection.destination.toString(), connection);
+
+      view = new RemoteTreeView();
+      view.expanded.add(connection.destination.toURI(remoteDir));
+      view.render();
+    });
+
+    waitsFor('the tree to list the real host', () =>
+      view.element.querySelector('.pulsar-ssh-client-loading') === null, 10000);
+
+    runs(() => {
+      const text = view.element.textContent;
+      expect(text).toContain('src');
+      expect(text).toContain('readme.md');
+      expect(text).not.toContain('.dotfile');
+
+      view.destroy();
+      connectionManager.connections.clear();
+      atom.config.set('pulsar-ssh-client.defaultDirectory', '.');
     });
   });
 
