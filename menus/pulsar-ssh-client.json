@@ -1,0 +1,20 @@
+{
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "SSH Client",
+          "submenu": [
+            { "label": "Connect to Host…", "command": "pulsar-ssh-client:connect-to-host" },
+            { "label": "Open Remote File…", "command": "pulsar-ssh-client:open-remote-file" },
+            { "label": "Disconnect…", "command": "pulsar-ssh-client:disconnect" },
+            { "type": "separator" },
+            { "label": "Open SSH Configuration File", "command": "pulsar-ssh-client:open-ssh-config" },
+            { "label": "Show Log", "command": "pulsar-ssh-client:show-log" }
+          ]
+        }
+      ]
+    }
+  ]
+}
