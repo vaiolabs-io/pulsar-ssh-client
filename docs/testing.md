@@ -110,10 +110,32 @@ The binary is dynamically linked against glibc, so it runs on a host with the
 same or newer glibc. An Ubuntu 24.04 `sshd` (glibc 2.39) runs on Debian 13
 (glibc 2.41).
 
+### Testing password authentication
+
+A second server offering only password auth catches a class of bug the
+key-based one cannot — the prompt path. You do not need to know a valid
+password: what matters is that the server's method list reaches the auth
+handler, the prompt appears, and the typed value is sent and rejected on its
+merits.
+
+```bash
+sed -e 's/^Port 2222/Port 2223/' \
+    -e 's/^PasswordAuthentication no/PasswordAuthentication yes/' \
+    sshd_config > sshd_config_pw
+printf 'PubkeyAuthentication no\nKbdInteractiveAuthentication no\n' >> sshd_config_pw
+/usr/sbin/sshd -f "$PWD/sshd_config_pw" -e -D &
+```
+
+Then add `PULSAR_SSH_TEST_PASSWORD_PORT=2223` to the environment.
+
+One trap when managing these by hand: `pkill -f hostsshd/sshd` matches its own
+shell and kills the command running it. Write the pattern as
+`pkill -f 'hostsshd/ss[h]d'`.
+
 ## What is still untested
 
-- Password and keyboard-interactive authentication. Both prompt, so neither
-  runs unattended.
+- A valid password being accepted. Rejection is covered; acceptance needs a
+  known account password.
 - `ProxyJump` and `ProxyCommand`. The tokenizer has unit tests; the chaining
   does not, because it needs two hosts.
 - Agent authentication, including the known gap where 2FA with an agent key
