@@ -16,6 +16,7 @@
   },
   "main": "./lib/main",
   "dependencies": {
+    "@xterm/addon-fit": "^0.11.0",
     "@xterm/xterm": "^6.0.0",
     "atom-select-list": "^0.8.1",
     "etch": "^0.14.1",

@@ -22,6 +22,10 @@
               "type": "separator"
             },
             {
+              "label": "Open Remote Terminal",
+              "command": "pulsar-ssh-client:open-terminal"
+            },
+            {
               "label": "Toggle Remote Tree",
               "command": "pulsar-ssh-client:toggle-tree"
             },

@@ -24,6 +24,7 @@ Early. See [CHANGELOG.md](CHANGELOG.md) for what works today.
 - Opens remote files as ordinary Pulsar editors. No local copy, no temp file,
   no sync step — reads and writes stream over SFTP.
 - Browses the remote host in its own file tree, in the left dock.
+- Opens a remote shell, reusing the connection that is already authenticated.
 
 ## What it deliberately does not do
 
@@ -32,8 +33,8 @@ can run on the remote machine. VS Code's Remote-SSH gets remote language
 servers, project-wide search, file watching and debugging because Microsoft
 ships a server binary that provides them. There is no equivalent to install.
 
-So this package gives you **remote file editing and a remote shell**, and those
-features stay local to the files you have open. That is the honest trade for
+So this package gives you **remote file editing, a remote file tree and a
+remote shell**, and those features stay local to the files you have open. That is the honest trade for
 requiring nothing on the remote host. If you need the full remote-IDE
 experience, mount the host with `sshfs` and open the mountpoint as a normal
 project folder.

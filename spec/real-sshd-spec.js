@@ -209,6 +209,27 @@ describeIntegration('against a real sshd', () => {
     });
   });
 
+  it('opens a real shell and runs a command in it', () => {
+    let stream = null;
+    let output = '';
+
+    waitsForPromise(async () => {
+      stream = await connection.shell({ term: 'xterm-256color', cols: 80, rows: 24 });
+      stream.on('data', data => { output += data.toString('utf8'); });
+      stream.write('echo PULSAR_SHELL_OK\n');
+    });
+
+    waitsFor('the shell to answer', () => output.includes('PULSAR_SHELL_OK'), 10000);
+
+    runs(() => {
+      expect(output).toContain('PULSAR_SHELL_OK');
+      // The remote sshd allocated the pty, so resizing must reach it.
+      expect(typeof stream.setWindow).toBe('function');
+      stream.setWindow(30, 100, 0, 0);
+      stream.end();
+    });
+  });
+
   it('opens a remote file as an editor and saves it', () => {
     let editor = null;
 

@@ -2,10 +2,14 @@
 
 ## Unreleased
 
-Remote files can be browsed, opened, edited and saved. The remote terminal is
-not built yet.
+Remote files can be browsed, opened, edited and saved, and there is a remote
+shell.
 
 ### Added
+- A remote terminal, wired straight to a shell channel on the connection that
+  is already open — so it does not authenticate a second time, which on a
+  two-factor host would mean a second code. The pty is allocated by the remote
+  `sshd`, so nothing is compiled locally.
 - A remote file tree, in the left dock. Pulsar's own tree-view cannot show a
   remote root -- it calls `fs.lstatSyncNoException` on each project path and
   drops the ones that fail, with no error -- so this is a separate tree. It
